@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco' 
 }
 
 repositories {
@@ -14,7 +15,43 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/test/**',
+                '**/Test*',
+                '**/*Test*'
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
