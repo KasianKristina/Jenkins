@@ -1,6 +1,8 @@
 *~
 .gradle/
 !gradle/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 gradle-app.setting
 build/
 bin/
